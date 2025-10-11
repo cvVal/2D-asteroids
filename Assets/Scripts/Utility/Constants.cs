@@ -7,5 +7,6 @@ namespace Utility
 
         public const string RotateActionName = "Rotate";
         public const string ThrustActionName = "Thrust";
+        public const string ShootActionName = "Shoot";
     }
 }

@@ -7,13 +7,14 @@ namespace Core
 {
     public class GameManager : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private PlayerInput playerInput;
+        [Header("References")]
+        [SerializeField] private PlayerInput playerInput;
 
         [SerializeField] private PlayerController player;
 
         private InputAction _rotateAction;
         private InputAction _thrustAction;
+        private InputAction _shootAction;
 
         private void Awake()
         {
@@ -39,6 +40,7 @@ namespace Core
             // Expect actions named "Rotate" (Value/Axes) and "Thrust" (Button)
             _rotateAction = playerInput.actions.FindAction(Constants.RotateActionName, throwIfNotFound: false);
             _thrustAction = playerInput.actions.FindAction(Constants.ThrustActionName, throwIfNotFound: false);
+            _shootAction = playerInput.actions.FindAction(Constants.ShootActionName, throwIfNotFound: false);
 
             if (_rotateAction != null)
             {
@@ -61,6 +63,16 @@ namespace Core
             {
                 Debug.LogError("GameManager: 'Thrust' action not found in PlayerInput actions.");
             }
+
+            if (_shootAction != null)
+            {
+                _shootAction.performed += OnShootPerformed; // press
+                _shootAction.Enable();
+            }
+            else
+            {
+                Debug.LogError("GameManager: 'Shoot' action not found in PlayerInput actions.");
+            }
         }
 
         private void OnDisable()
@@ -77,6 +89,12 @@ namespace Core
                 _thrustAction.started -= OnThrustStarted;
                 _thrustAction.canceled -= OnThrustCanceled;
                 _thrustAction.Disable();
+            }
+
+            if (_shootAction != null)
+            {
+                _shootAction.performed -= OnShootPerformed;
+                _shootAction.Disable();
             }
         }
 
@@ -99,6 +117,11 @@ namespace Core
         private void OnThrustCanceled(InputAction.CallbackContext ctx)
         {
             if (player) player.SetThrust(false);
+        }
+
+        private void OnShootPerformed(InputAction.CallbackContext ctx)
+        {
+            if (player) player.OnShoot();
         }
     }
 }
