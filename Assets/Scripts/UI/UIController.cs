@@ -1,4 +1,3 @@
-using System.Globalization;
 using Core;
 using TMPro;
 using UnityEngine;
@@ -13,17 +12,17 @@ namespace UI
 
         private void OnEnable()
         {
-            EventManager.OnChangeScore += HandleChangeScore;
+            EventManager.OnScoreChanged += HandleChangeScore;
         }
 
         private void OnDisable()
         {
-            EventManager.OnChangeScore -= HandleChangeScore;
+            EventManager.OnScoreChanged -= HandleChangeScore;
         }
 
         private void HandleChangeScore(int newScore)
         {
-            scoreText.text = $"Score: {newScore.ToString(CultureInfo.InvariantCulture)}";
+            scoreText.text = $"Score: {newScore:D7}";
         }
     }
 }

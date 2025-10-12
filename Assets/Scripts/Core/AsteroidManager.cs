@@ -26,9 +26,6 @@ namespace Core
         private readonly Dictionary<Asteroid, ObjectPool<Asteroid>> _pools = new();
         private readonly HashSet<Asteroid> _active = new();
 
-        public event Action OnWaveCleared;
-        public event Action<int> OnScoredPoints;
-
         private ObjectPool<Asteroid> GetOrCreatePool(Asteroid prefab)
         {
             if (!prefab)
@@ -69,7 +66,7 @@ namespace Core
                     _active.Remove(asteroid);
                     if (_active.Count == 0)
                     {
-                        OnWaveCleared?.Invoke();
+                        EventManager.TriggerWaveComplete();
                     }
                 },
                 actionOnDestroy: asteroid => Destroy(asteroid.gameObject),
@@ -113,7 +110,7 @@ namespace Core
         {
             if (bullet) Destroy(bullet);
 
-            OnScoredPoints?.Invoke(asteroid.Config.Points);
+            EventManager.TriggerPointsScored(asteroid.Config.Points);
 
             // Derive heading from current velocity (fallback to random)
             var hasRb = asteroid.TryGetComponent<Rigidbody2D>(out var body);

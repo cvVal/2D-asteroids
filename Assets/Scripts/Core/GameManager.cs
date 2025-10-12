@@ -1,4 +1,3 @@
-using System;
 using Characters;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,10 +37,6 @@ namespace Core
         [Tooltip(
             "If > 0, reaching and clearing this wave ends the game with a win. 0 disables the limit (infinite waves).")]
         [SerializeField] private int maxLevel;
-
-        public event Action OnGameWon;
-        public event Action<int> OnLivesChanged; // passes remaining lives
-        public event Action OnGameOver;
 
         private int _currentWave = 1;
         private bool _gameWon;
@@ -130,7 +125,6 @@ namespace Core
             }
             else
             {
-                HookPlayerEvents(player);
                 ResetPlayerForSpawn(player, applyInvincibility: false, useLastPosition: false);
             }
 
@@ -140,17 +134,17 @@ namespace Core
                 asteroidManager?.StartNewWave(Mathf.Max(1, initialWaveMultiplier));
             }
 
-            // notify UI of lives at start
-            OnLivesChanged?.Invoke(_lives);
+            // Notify UI of lives and score at start
+            EventManager.TriggerLivesChanged(_lives);
+            EventManager.TriggerScoreChanged(_score);
         }
 
         private void OnEnable()
         {
-            if (asteroidManager)
-            {
-                asteroidManager.OnWaveCleared += HandleWaveCleared;
-                asteroidManager.OnScoredPoints += HandleScoredPoints;
-            }
+            // Subscribe to events
+            EventManager.OnWaveComplete += HandleWaveComplete;
+            EventManager.OnPointsScored += HandlePointsScored;
+            EventManager.OnPlayerDeath += HandlePlayerDeath;
 
             if (!playerInput || !playerInput.actions) return;
 
@@ -194,11 +188,10 @@ namespace Core
 
         private void OnDisable()
         {
-            if (asteroidManager != null)
-            {
-                asteroidManager.OnWaveCleared -= HandleWaveCleared;
-                asteroidManager.OnScoredPoints -= HandleScoredPoints;
-            }
+            // Unsubscribe from events
+            EventManager.OnWaveComplete -= HandleWaveComplete;
+            EventManager.OnPointsScored -= HandlePointsScored;
+            EventManager.OnPlayerDeath -= HandlePlayerDeath;
 
             if (_rotateAction != null)
             {
@@ -219,8 +212,6 @@ namespace Core
                 _shootAction.performed -= OnShootPerformed;
                 _shootAction.Disable();
             }
-
-            UnhookPlayerEvents(player);
         }
 
         private void OnRotatePerformed(InputAction.CallbackContext ctx)
@@ -256,14 +247,14 @@ namespace Core
             if (player) player.OnShoot();
         }
 
-        private void HandleScoredPoints(int points)
+        private void HandlePointsScored(int points)
         {
             _score += points;
-            
-            EventManager.RaiseChangeScore(_score);
+
+            EventManager.TriggerScoreChanged(_score);
         }
 
-        private void HandleWaveCleared()
+        private void HandleWaveComplete()
         {
             if (_gameWon) return;
 
@@ -274,7 +265,7 @@ namespace Core
             {
                 _gameWon = true;
                 Debug.Log("GameManager: All waves cleared. You win!");
-                OnGameWon?.Invoke();
+                EventManager.TriggerGameWin();
                 return;
             }
 
@@ -283,7 +274,7 @@ namespace Core
             asteroidManager.StartNewWave(nextMultiplier);
         }
 
-        private void HandlePlayerDied()
+        private void HandlePlayerDeath()
         {
             // Capture last known transform before clearing reference
             if (player)
@@ -293,14 +284,16 @@ namespace Core
                 _hasLastPlayerPosition = true;
             }
 
-            UnhookPlayerEvents(player);
             player = null;
 
             if (_lives > 0)
             {
                 _lives--;
-                OnLivesChanged?.Invoke(_lives);
+
+                EventManager.TriggerLivesChanged(_lives);
+
                 Debug.Log($"GameManager: Player died. Lives remaining: {_lives}");
+
                 if (_lives > 0)
                 {
                     // Immediate respawn WITH invincibility blink at last known position
@@ -347,7 +340,6 @@ namespace Core
             var instance = Instantiate(playerPrefab, position, rotation);
 
             player = instance;
-            HookPlayerEvents(player);
             ResetPlayerForSpawn(player, applyInvincibility, useLastPosition);
             Debug.Log($"GameManager: Spawned player at {position}.");
         }
@@ -379,22 +371,6 @@ namespace Core
             }
         }
 
-        private void HookPlayerEvents(PlayerController playerController)
-        {
-            if (playerController)
-            {
-                playerController.OnDied += HandlePlayerDied;
-            }
-        }
-
-        private void UnhookPlayerEvents(PlayerController playerController)
-        {
-            if (playerController)
-            {
-                playerController.OnDied -= HandlePlayerDied;
-            }
-        }
-
         private void TriggerGameOver()
         {
             if (_gameOver) return;
@@ -403,7 +379,7 @@ namespace Core
 
             Debug.Log("GameManager: Game Over");
 
-            OnGameOver?.Invoke();
+            EventManager.TriggerGameEnd();
 
             _rotateAction?.Disable();
             _thrustAction?.Disable();

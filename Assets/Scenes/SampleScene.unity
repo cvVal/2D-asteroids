@@ -431,7 +431,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'SCORE: 0'
+  m_text: 'SCORE: 0000000'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 425b71afbc9e945a6a5d8abd3e89f432, type: 2}
   m_sharedMaterial: {fileID: -4970712077419130477, guid: 425b71afbc9e945a6a5d8abd3e89f432, type: 2}

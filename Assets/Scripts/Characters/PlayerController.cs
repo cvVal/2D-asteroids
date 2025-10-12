@@ -1,6 +1,6 @@
-using System;
 using UnityEngine;
 using Utility;
+using Core;
 
 namespace Characters
 {
@@ -16,8 +16,6 @@ namespace Characters
 
         [Header("Shooting Settings")]
         [SerializeField] private GameObject bulletPrefab;
-
-        public event Action OnDied;
 
         private Rigidbody2D _rigidbody2D;
         private float _rotationAmount;
@@ -101,7 +99,7 @@ namespace Characters
 
             if (!other.CompareTag(Constants.AsteroidTag)) return;
 
-            OnDied?.Invoke();
+            EventManager.TriggerPlayerDeath();
             Destroy(gameObject);
         }
     }
