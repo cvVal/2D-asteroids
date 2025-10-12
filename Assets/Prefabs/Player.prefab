@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6715995813812987172}
   - component: {fileID: 1434580158682980145}
   - component: {fileID: 4244935695111151476}
+  - component: {fileID: 6698899980096745942}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -203,7 +204,7 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 0.5
   maxSpeed: 10
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 1253394800691222056, guid: 80de55b64aac545a39e28b679ee029e5, type: 3}
 --- !u!114 &4244935695111151476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,3 +217,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50a44a5aa021b445992c8427078c6078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Core.ScreenWrap
+--- !u!95 &6698899980096745942
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7724773419504879960}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a9158e7b2014d4bf79c39e9632db521f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
