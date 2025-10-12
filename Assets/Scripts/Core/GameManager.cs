@@ -22,9 +22,6 @@ namespace Core
         [Tooltip("Optional spawn point. If null, will use world origin (0,0,0).")]
         [SerializeField] private Transform playerSpawnPoint;
 
-        [Tooltip("Number of lives the player starts with.")]
-        [SerializeField] private int startingLives = 3;
-
         [Tooltip("Seconds of invincibility after spawn.")]
         [SerializeField] private float spawnInvincibilityTime = 2f;
 
@@ -40,7 +37,7 @@ namespace Core
 
         private int _currentWave = 1;
         private bool _gameWon;
-        private int _lives;
+        private int _lives = 3;
         private bool _isRespawning;
         private bool _gameOver;
 
@@ -59,7 +56,6 @@ namespace Core
             _gameWon = false;
             _gameOver = false;
             _currentWave = 1;
-            _lives = Mathf.Max(0, startingLives);
 
             if (!playerInput)
             {
@@ -291,9 +287,7 @@ namespace Core
                 _lives--;
 
                 EventManager.TriggerLivesChanged(_lives);
-
-                Debug.Log($"GameManager: Player died. Lives remaining: {_lives}");
-
+                
                 if (_lives > 0)
                 {
                     // Immediate respawn WITH invincibility blink at last known position
@@ -341,7 +335,6 @@ namespace Core
 
             player = instance;
             ResetPlayerForSpawn(player, applyInvincibility, useLastPosition);
-            Debug.Log($"GameManager: Spawned player at {position}.");
         }
 
         private void ResetPlayerForSpawn(
