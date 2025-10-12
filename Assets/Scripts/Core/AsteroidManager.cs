@@ -27,6 +27,7 @@ namespace Core
         private readonly HashSet<Asteroid> _active = new();
 
         public event Action OnWaveCleared;
+        public event Action<int> OnScoredPoints;
 
         private ObjectPool<Asteroid> GetOrCreatePool(Asteroid prefab)
         {
@@ -111,6 +112,8 @@ namespace Core
         public void HandleBulletHit(Asteroid asteroid, GameObject bullet)
         {
             if (bullet) Destroy(bullet);
+
+            OnScoredPoints?.Invoke(asteroid.Config.Points);
 
             // Derive heading from current velocity (fallback to random)
             var hasRb = asteroid.TryGetComponent<Rigidbody2D>(out var body);

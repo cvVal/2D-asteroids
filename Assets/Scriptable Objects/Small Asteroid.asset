@@ -16,3 +16,4 @@ MonoBehaviour:
   fragmentPrefab: {fileID: 0}
   fragmentsCount: 2
   inheritHeading: 0
+  points: 150

@@ -57,6 +57,8 @@ namespace Core
         private Quaternion _lastPlayerRotation;
         private bool _hasLastPlayerPosition;
 
+        private int _score;
+
         private void Awake()
         {
             _gameWon = false;
@@ -147,6 +149,7 @@ namespace Core
             if (asteroidManager)
             {
                 asteroidManager.OnWaveCleared += HandleWaveCleared;
+                asteroidManager.OnScoredPoints += HandleScoredPoints;
             }
 
             if (!playerInput || !playerInput.actions) return;
@@ -194,6 +197,7 @@ namespace Core
             if (asteroidManager != null)
             {
                 asteroidManager.OnWaveCleared -= HandleWaveCleared;
+                asteroidManager.OnScoredPoints -= HandleScoredPoints;
             }
 
             if (_rotateAction != null)
@@ -250,6 +254,13 @@ namespace Core
             if (_gameOver || _isRespawning) return;
 
             if (player) player.OnShoot();
+        }
+
+        private void HandleScoredPoints(int points)
+        {
+            _score += points;
+            Debug.Log($"GameManager: Scored {points} points. Total score: {_score}");
+            // Invoke an event here to notify UI of score changes
         }
 
         private void HandleWaveCleared()

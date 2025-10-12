@@ -18,9 +18,13 @@ namespace Core
         [Tooltip("If true, fragments split around the parent's current heading; otherwise use random heading.")]
         [SerializeField] private bool inheritHeading = true;
 
+        [Header("Points")]
+        [Min(0)] [SerializeField] private int points = 50;
+
         public float BaseSpeed => baseSpeed;
         public Asteroid FragmentPrefab => fragmentPrefab;
         public int FragmentsCount => fragmentsCount;
         public bool InheritHeading => inheritHeading;
+        public int Points => points;
     }
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   fragmentPrefab: {fileID: 3757494966802257077, guid: 71af2faa815a042afaaeebe1d4a19958, type: 3}
   fragmentsCount: 2
   inheritHeading: 1
+  points: 100
