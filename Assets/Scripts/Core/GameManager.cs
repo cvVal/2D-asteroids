@@ -259,8 +259,8 @@ namespace Core
         private void HandleScoredPoints(int points)
         {
             _score += points;
-            Debug.Log($"GameManager: Scored {points} points. Total score: {_score}");
-            // Invoke an event here to notify UI of score changes
+            
+            EventManager.RaiseChangeScore(_score);
         }
 
         private void HandleWaveCleared()
