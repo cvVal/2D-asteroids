@@ -11,6 +11,15 @@ namespace Core
         [SerializeField] private PlayerInput playerInput;
 
         [SerializeField] private PlayerController player;
+        
+        [SerializeField] private AsteroidManager asteroidManager;
+
+        [Header("Waves")]
+        [SerializeField] private int initialWaveMultiplier = 1;
+
+        [SerializeField] private int waveMultiplierIncrement = 1;
+
+        private int _currentWave = 1;
 
         private InputAction _rotateAction;
         private InputAction _thrustAction;
@@ -18,26 +27,57 @@ namespace Core
 
         private void Awake()
         {
-            player = FindFirstObjectByType<PlayerController>();
-
             if (!player)
             {
-                Debug.LogError("GameManager: No PlayerController found in scene.");
+                player = FindFirstObjectByType<PlayerController>();
+                if (!player)
+                {
+                    Debug.LogError("GameManager: No PlayerController found in scene.");
+                }
             }
-
-            playerInput = GetComponent<PlayerInput>();
 
             if (!playerInput)
             {
-                Debug.LogError("GameManager: PlayerInput component is required on the GameManager GameObject.");
+                playerInput = GetComponent<PlayerInput>();
+                if (!playerInput)
+                {
+                    Debug.LogError("GameManager: PlayerInput component is required on the GameManager GameObject.");
+                }
             }
+
+            if (!asteroidManager || !asteroidManager.gameObject.scene.IsValid())
+            {
+                var sceneMgr = FindFirstObjectByType<AsteroidManager>();
+                if (sceneMgr && sceneMgr.gameObject.scene.IsValid())
+                {
+                    asteroidManager = sceneMgr;
+                }
+                else if (asteroidManager)
+                {
+                    // A prefab asset was assigned; instantiate it into the scene
+                    asteroidManager = Instantiate(asteroidManager);
+                    asteroidManager.name = "AsteroidManager (Runtime)";
+                }
+                else
+                {
+                    Debug.LogError("GameManager: AsteroidManager not found in scene and none assigned.");
+                }
+            }
+
+            // Start first wave using multiplier
+            asteroidManager?.StartNewWave(Mathf.Max(1, initialWaveMultiplier));
         }
 
         private void OnEnable()
         {
+            if (asteroidManager)
+            {
+                asteroidManager.OnWaveCleared += HandleWaveCleared;
+            }
+
             if (!playerInput || !playerInput.actions) return;
 
-            // Expect actions named "Rotate" (Value/Axes) and "Thrust" (Button)
+            // Expect actions named "Rotate" (Value/Axes) and "Thrust" (Button) and "Shoot" (Button)
             _rotateAction = playerInput.actions.FindAction(Constants.RotateActionName, throwIfNotFound: false);
             _thrustAction = playerInput.actions.FindAction(Constants.ThrustActionName, throwIfNotFound: false);
             _shootAction = playerInput.actions.FindAction(Constants.ShootActionName, throwIfNotFound: false);
@@ -77,6 +117,11 @@ namespace Core
 
         private void OnDisable()
         {
+            if (asteroidManager != null)
+            {
+                asteroidManager.OnWaveCleared -= HandleWaveCleared;
+            }
+
             if (_rotateAction != null)
             {
                 _rotateAction.performed -= OnRotatePerformed;
@@ -100,7 +145,8 @@ namespace Core
 
         private void OnRotatePerformed(InputAction.CallbackContext ctx)
         {
-            var value = ctx.ReadValue<float>(); // -1..1 from 1D Axis composite or stick X
+            // -1..1 from 1D Axis composite or stick X
+            var value = ctx.ReadValue<float>();
             if (player) player.SetRotation(value);
         }
 
@@ -122,6 +168,15 @@ namespace Core
         private void OnShootPerformed(InputAction.CallbackContext ctx)
         {
             if (player) player.OnShoot();
+        }
+
+        private void HandleWaveCleared()
+        {
+            _currentWave++;
+
+            var nextMultiplier = Mathf.Max(1, initialWaveMultiplier + (_currentWave - 1) * waveMultiplierIncrement);
+
+            asteroidManager.StartNewWave(nextMultiplier);
         }
     }
 }
