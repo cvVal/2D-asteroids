@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 912372918085537247}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66,6 +66,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: cdba9bed-a0b2-4291-bd05-64d098e081d2
     m_ActionName: 'Gameplay/Thrust[/Keyboard/w]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0c044956-a3f8-4d48-b5e3-a97bc88aa5e7
+    m_ActionName: 'Gameplay/Shoot[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: df982454-4a96-41fc-b465-c9a6cd4b4fc8
+    m_ActionName: 'UI/Interact[/Keyboard/enter]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -85,3 +93,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerInput: {fileID: 6234949541193594676}
   player: {fileID: 0}
+  asteroidManager: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  playerSpawnPoint: {fileID: 0}
+  spawnInvincibilityTime: 2
+  initialWaveMultiplier: 1
+  waveMultiplierIncrement: 1
+  maxLevel: 0

@@ -129,8 +129,11 @@ namespace Core
             {
                 asteroidManager?.StartNewWave(Mathf.Max(1, initialWaveMultiplier));
             }
+        }
 
-            // Notify UI of lives and score at start
+        private void Start()
+        {
+            // Notify UI of initial state after all OnEnable methods have run
             EventManager.TriggerLivesChanged(_lives);
             EventManager.TriggerScoreChanged(_score);
         }
@@ -287,7 +290,7 @@ namespace Core
                 _lives--;
 
                 EventManager.TriggerLivesChanged(_lives);
-                
+
                 if (_lives > 0)
                 {
                     // Immediate respawn WITH invincibility blink at last known position
