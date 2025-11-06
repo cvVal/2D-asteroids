@@ -41,6 +41,7 @@ namespace Core
         private int _currentWave = 1;
         private bool _gameWon;
         private int _lives = 3;
+        private const int MaxLives = 5;
         private bool _isRespawning;
         private bool _gameOver;
 
@@ -53,6 +54,7 @@ namespace Core
         private bool _hasLastPlayerPosition;
 
         private int _score;
+        private int _scoreForExtraLife = 3000;
 
         private void Awake()
         {
@@ -256,6 +258,16 @@ namespace Core
             _score += points;
 
             EventManager.TriggerScoreChanged(_score);
+
+            if (_score < _scoreForExtraLife) return;
+
+            if (_lives < MaxLives)
+            {
+                _lives++;
+                EventManager.TriggerLivesChanged(_lives);
+            }
+
+            _scoreForExtraLife += 3000;
         }
 
         private void HandleWaveComplete()
