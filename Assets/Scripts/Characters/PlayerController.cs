@@ -97,10 +97,18 @@ namespace Characters
         {
             if (_isInvincible) return;
 
-            if (!other.CompareTag(Constants.AsteroidTag)) return;
-
-            EventManager.TriggerPlayerDeath();
-            Destroy(gameObject);
+            if (other.CompareTag(Constants.AsteroidTag) 
+                || other.CompareTag(Constants.EnemyLaserTag))
+            {
+                EventManager.TriggerPlayerDeath();
+                Destroy(gameObject);
+            }
+            else if (other.CompareTag(Constants.EnemyTag))
+            {
+                EventManager.TriggerPlayerDeath();
+                Destroy(gameObject);
+                Destroy(other.gameObject);
+            }
         }
     }
 }

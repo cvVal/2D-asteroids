@@ -7,6 +7,8 @@ TagManager:
   - Bullet
   - Asteroid
   - GameManager
+  - EnemyLaser
+  - Enemy
   layers:
   - Default
   - TransparentFX

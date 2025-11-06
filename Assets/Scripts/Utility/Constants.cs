@@ -6,6 +6,7 @@ namespace Utility
         public const string EnemyTag = "Enemy";
         public const string BulletTag = "Bullet";
         public const string AsteroidTag = "Asteroid";
+        public const string EnemyLaserTag = "EnemyLaser";
         public const string GameManagerTag = "GameManager";
 
         public const string GameplayActionMap = "Gameplay";
