@@ -25,6 +25,9 @@ namespace Core
         [Tooltip("Seconds of invincibility after spawn.")]
         [SerializeField] private float spawnInvincibilityTime = 2f;
 
+        [Header("Enemy Spawning")]
+        [SerializeField] private GameObject flyingSaucerPrefab;
+
         [Header("Waves")]
         [SerializeField] private int initialWaveMultiplier = 1;
 
@@ -128,6 +131,8 @@ namespace Core
             if (!_gameWon && (maxLevel <= 0 || _currentWave <= maxLevel))
             {
                 asteroidManager?.StartNewWave(Mathf.Max(1, initialWaveMultiplier));
+
+                InvokeRepeating(nameof(SpawnEnemies), 5f, 10f);
             }
         }
 
@@ -246,7 +251,7 @@ namespace Core
             if (player) player.OnShoot();
         }
 
-        private void HandlePointsScored(int points)
+        public void HandlePointsScored(int points)
         {
             _score += points;
 
@@ -380,6 +385,14 @@ namespace Core
             _rotateAction?.Disable();
             _thrustAction?.Disable();
             _shootAction?.Disable();
+        }
+
+        private void SpawnEnemies()
+        {
+            if (!flyingSaucerPrefab) return;
+
+            var position = AsteroidManager.RandomEdgePosition();
+            Instantiate(flyingSaucerPrefab, position, Quaternion.identity);
         }
     }
 }

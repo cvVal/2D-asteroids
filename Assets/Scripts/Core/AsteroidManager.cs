@@ -177,7 +177,7 @@ namespace Core
             }
         }
 
-        private static Vector2 RandomEdgePosition()
+        public static Vector2 RandomEdgePosition()
         {
             var edge = Random.Range(0, 4);
             return edge switch

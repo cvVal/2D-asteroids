@@ -1,3 +1,4 @@
+using Core;
 using UnityEngine;
 using Utility;
 using Random = UnityEngine.Random;
@@ -8,13 +9,16 @@ namespace Characters
     {
         [SerializeField] private float speed = 2f;
         [SerializeField] private GameObject laserPrefab;
+        [SerializeField] private int pointsWorth = 300;
 
         private Vector2 _currentDirection = Vector2.zero;
         private PlayerController _player;
+        private GameManager _gameManager;
 
         private void Start()
         {
             _player = FindFirstObjectByType<PlayerController>();
+            _gameManager = FindFirstObjectByType<GameManager>();
 
             RandomDirection();
             InvokeRepeating(nameof(ChangeYDirection), 2f, 2f);
@@ -31,6 +35,7 @@ namespace Characters
         {
             if (other.CompareTag(Constants.BulletTag))
             {
+                _gameManager?.HandlePointsScored(pointsWorth);
                 Destroy(gameObject);
             }
         }
