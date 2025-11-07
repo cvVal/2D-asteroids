@@ -1,7 +1,6 @@
+using Managers;
 using UnityEngine;
 using Utility;
-using Core;
-using Managers;
 
 namespace Characters
 {
@@ -17,6 +16,9 @@ namespace Characters
 
         [Header("Shooting Settings")]
         [SerializeField] private GameObject bulletPrefab;
+
+        [Header("VFX Settings")]
+        [SerializeField] private ParticleSystem thrusterVFX;
 
         private Rigidbody2D _rigidbody2D;
         private float _rotationAmount;
@@ -38,6 +40,18 @@ namespace Characters
             _rigidbody2D.AddTorque(-_rotationAmount * rotateSpeed);
 
             _rigidbody2D.linearVelocity = Vector2.ClampMagnitude(_rigidbody2D.linearVelocity, maxSpeed);
+
+            if (!thrusterVFX) return;
+
+            switch (_isThrustHeld)
+            {
+                case true when !thrusterVFX.isPlaying:
+                    thrusterVFX.Play();
+                    break;
+                case false when thrusterVFX.isPlaying:
+                    thrusterVFX.Stop();
+                    break;
+            }
         }
 
         // ----- Event-driven: these are called from GameManager based on PlayerInput events -----
@@ -98,7 +112,7 @@ namespace Characters
         {
             if (_isInvincible) return;
 
-            if (other.CompareTag(Constants.AsteroidTag) 
+            if (other.CompareTag(Constants.AsteroidTag)
                 || other.CompareTag(Constants.EnemyLaserTag))
             {
                 EventManager.TriggerPlayerDeath();
