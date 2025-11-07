@@ -36,6 +36,9 @@ namespace Characters
             if (other.CompareTag(Constants.BulletTag))
             {
                 _gameManager?.HandlePointsScored(pointsWorth);
+
+                EventManager.TriggerEntityDestroyed(transform.position, EffectKeys.GeneralExplosion);
+
                 Destroy(gameObject);
             }
         }
