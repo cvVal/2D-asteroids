@@ -11,7 +11,9 @@ namespace Managers
     [Serializable]
     public struct SpawnEntry
     {
-        public Asteroid prefab;
+        [Tooltip("Possible asteroid prefabs to choose from for this wave entry.")]
+        public List<Asteroid> prefabs;
+        [Tooltip("Number of asteroids to spawn for this entry (base count; multiplied by wave multiplier at wave start).")]
         public int count;
     }
 
@@ -90,12 +92,21 @@ namespace Managers
 
             foreach (var entry in initialWave)
             {
-                var pool = GetOrCreatePool(entry.prefab);
-                if (pool == null) continue;
+                // Validate entry has at least one prefab
+                if (entry.prefabs == null || entry.prefabs.Count == 0)
+                {
+                    Debug.LogError("AsteroidManager: Missing prefab(s) in wave configuration.");
+                    continue;
+                }
 
                 var total = Mathf.Max(0, entry.count) * Mathf.Max(1, multiplier);
                 for (var i = 0; i < total; i++)
                 {
+                    // Choose a random prefab from the configured list for this spawn
+                    var chosen = entry.prefabs[Random.Range(0, entry.prefabs.Count)];
+                    var pool = GetOrCreatePool(chosen);
+                    if (pool == null) continue;
+
                     var ast = pool.Get();
                     ast.transform.position = RandomEdgePosition();
 
