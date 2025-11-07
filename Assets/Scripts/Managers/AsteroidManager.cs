@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 using UnityEngine.Pool;
 using Utility;
 using Random = UnityEngine.Random;
 
-namespace Core
+namespace Managers
 {
     [Serializable]
     public struct SpawnEntry

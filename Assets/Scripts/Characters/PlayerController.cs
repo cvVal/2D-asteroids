@@ -1,6 +1,7 @@
 using UnityEngine;
 using Utility;
 using Core;
+using Managers;
 
 namespace Characters
 {

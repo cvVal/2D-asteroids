@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Utility;
 
-namespace Core
+namespace Managers
 {
     public class GameManager : MonoBehaviour
     {
