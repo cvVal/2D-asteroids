@@ -37,6 +37,9 @@ namespace Core
         [Tooltip(
             "If > 0, reaching and clearing this wave ends the game with a win. 0 disables the limit (infinite waves).")]
         [SerializeField] private int maxLevel;
+        
+        [Header("Effects")]
+        [SerializeField] private ParticleSystem playerExplosionFX;
 
         private int _currentWave = 1;
         private bool _gameWon;
@@ -299,6 +302,9 @@ namespace Core
                 _lastPlayerRotation = player.transform.rotation;
                 _hasLastPlayerPosition = true;
             }
+            
+            playerExplosionFX.transform.position = _lastPlayerPosition;
+            playerExplosionFX.Play();
 
             player = null;
 
