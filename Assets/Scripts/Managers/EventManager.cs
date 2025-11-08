@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Utility;
 
 namespace Managers
 {
@@ -21,8 +22,7 @@ namespace Managers
         public static event Action OnWaveComplete;
 
         // Generalized entity destruction event: position + effect key (allows reuse across entity types)
-        // key can be any string the EffectsManager understands (e.g. EffectKeys.GeneralExplosion).
-        public static event Action<Vector2, string> OnEntityDestroyed;
+        public static event Action<Vector2, EffectKey> OnEntityDestroyed;
 
         // Score Event Triggers
         public static void TriggerScoreChanged(int newScore) =>
@@ -50,7 +50,7 @@ namespace Managers
             OnWaveComplete?.Invoke();
 
         // Generalized entity destruction trigger
-        public static void TriggerEntityDestroyed(Vector2 position, string effectKey)
+        public static void TriggerEntityDestroyed(Vector2 position, EffectKey effectKey)
         {
             OnEntityDestroyed?.Invoke(position, effectKey);
         }

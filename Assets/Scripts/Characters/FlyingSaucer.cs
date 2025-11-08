@@ -38,7 +38,7 @@ namespace Characters
             {
                 _gameManager?.HandlePointsScored(pointsWorth);
 
-                EventManager.TriggerEntityDestroyed(transform.position, EffectKeys.GeneralExplosion);
+                EventManager.TriggerEntityDestroyed(transform.position, EffectKey.EnemyExplosion);
 
                 Destroy(gameObject);
             }

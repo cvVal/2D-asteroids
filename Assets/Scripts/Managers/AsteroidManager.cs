@@ -134,7 +134,7 @@ namespace Managers
             var destroyedPosition = asteroid.transform.position;
             Release(asteroid);
 
-            EventManager.TriggerEntityDestroyed(destroyedPosition, EffectKeys.GeneralExplosion);
+            EventManager.TriggerEntityDestroyed(destroyedPosition, EffectKey.AsteroidExplosion);
 
             // Spawn fragments based on the asteroid's config
             var asteroidCfg = asteroid.Config;

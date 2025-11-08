@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core;
 using UnityEngine;
+using Utility;
 
 namespace Managers
 {
@@ -15,7 +15,7 @@ namespace Managers
         [Serializable]
         private struct EffectMapping
         {
-            public string key;
+            public EffectKey key;
             public GameObject prefab;
             public float duration;
         }
@@ -24,17 +24,15 @@ namespace Managers
         [SerializeField] private List<EffectMapping> mappings = new();
 
         // dictionary for fast lookup
-        private Dictionary<string, (GameObject prefab, float duration)> _map;
+        private Dictionary<EffectKey, (GameObject prefab, float duration)> _map;
 
         private void Awake()
         {
             // Build the lookup dictionary from serialized list
-            _map = new Dictionary<string, (GameObject, float)>(StringComparer.Ordinal);
+            _map = new Dictionary<EffectKey, (GameObject, float)>();
             if (mappings == null) return;
 
-            foreach (var m in mappings.Where(m =>
-                         !string.IsNullOrEmpty(m.key) && m.prefab != null)
-                    )
+            foreach (var m in mappings.Where(m => m.key != EffectKey.None && m.prefab != null))
             {
                 _map[m.key] = (m.prefab, m.duration);
             }
@@ -50,9 +48,9 @@ namespace Managers
             EventManager.OnEntityDestroyed -= HandleEntityDestroyed;
         }
 
-        private void HandleEntityDestroyed(Vector2 position, string key)
+        private void HandleEntityDestroyed(Vector2 position, EffectKey key)
         {
-            if (string.IsNullOrEmpty(key)) return;
+            if (key == EffectKey.None) return;
 
             if (!_map.TryGetValue(key, out var info))
             {

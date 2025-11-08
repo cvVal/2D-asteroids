@@ -300,7 +300,7 @@ namespace Managers
                 _hasLastPlayerPosition = true;
             }
 
-            EventManager.TriggerEntityDestroyed(_lastPlayerPosition, EffectKeys.PlayerExplosion);
+            EventManager.TriggerEntityDestroyed(_lastPlayerPosition, EffectKey.PlayerExplosion);
 
             player = null;
 
