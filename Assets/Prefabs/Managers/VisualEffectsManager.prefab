@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 602162210666926558}
   - component: {fileID: 7255881824310201258}
   m_Layer: 0
-  m_Name: EffectsManager
+  m_Name: VisualEffectsManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,9 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.EffectsManager
   mappings:
-  - key: general_explosion
+  - key: 3
+    prefab: {fileID: 7006286407186948105, guid: 8f70c26a5845846b2a1336b80222fccc, type: 3}
+    duration: 2.1
+  - key: 5
     prefab: {fileID: 4927606269899895356, guid: 08384041000f14d6db2d56cd55483cd4, type: 3}
     duration: 2.1
-  - key: player_explosion
-    prefab: {fileID: 7006286407186948105, guid: 8f70c26a5845846b2a1336b80222fccc, type: 3}
+  - key: 4
+    prefab: {fileID: 4927606269899895356, guid: 08384041000f14d6db2d56cd55483cd4, type: 3}
     duration: 2.1
