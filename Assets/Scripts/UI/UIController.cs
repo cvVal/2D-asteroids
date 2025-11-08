@@ -1,8 +1,9 @@
-using Core;
 using Managers;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utility;
 
@@ -12,10 +13,12 @@ namespace UI
     {
         private UIBaseState _currentState;
         private UIGameOverState _gameOverState;
+        private UIGameWinState _gameWinState;
 
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private Image[] livesImages;
         [SerializeField] private GameObject gameOverPanel;
+        [SerializeField] private GameObject gameWinPanel;
 
         private PlayerInput _playerInput;
         private InputAction _interactAction;
@@ -23,6 +26,7 @@ namespace UI
         private void Awake()
         {
             _gameOverState = new UIGameOverState(this);
+            _gameWinState = new UIGameWinState(this);
 
             _playerInput = GameObject
                 .FindGameObjectWithTag(Constants.GameManagerTag)
@@ -34,6 +38,7 @@ namespace UI
             EventManager.OnScoreChanged += HandleScoreChanged;
             EventManager.OnLivesChanged += HandleLivesChanged;
             EventManager.OnGameEnd += HandleGameEnd;
+            EventManager.OnGameWin += HandleGameWin;
 
             if (!_playerInput || !_playerInput.actions) return;
 
@@ -55,6 +60,7 @@ namespace UI
             EventManager.OnScoreChanged -= HandleScoreChanged;
             EventManager.OnLivesChanged -= HandleLivesChanged;
             EventManager.OnGameEnd -= HandleGameEnd;
+            EventManager.OnGameWin -= HandleGameWin;
 
             if (_interactAction != null)
             {
@@ -95,12 +101,34 @@ namespace UI
 
         private void HandleGameEnd()
         {
+            gameOverPanel.SetActive(true);
+            SwitchToUIActionMap();
+
             _currentState = _gameOverState;
             _currentState.EnterState();
+        }
 
-            gameOverPanel.SetActive(true);
-
+        private void HandleGameWin()
+        {
+            gameWinPanel.SetActive(true);
             SwitchToUIActionMap();
+
+            _currentState = _gameWinState;
+            _currentState.EnterState();
+        }
+
+        public void RestartGame()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

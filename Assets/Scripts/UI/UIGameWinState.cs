@@ -3,9 +3,9 @@ using UnityEngine.EventSystems;
 
 namespace UI
 {
-    public class UIGameOverState : UIBaseState
+    public class UIGameWinState : UIBaseState
     {
-        public UIGameOverState(UIController uiController) : base(uiController)
+        public UIGameWinState(UIController uiController) : base(uiController)
         {
         }
 

@@ -66,6 +66,8 @@ namespace Characters
 
             if (_player)
             {
+                AudioManager.Instance.PlaySfx(EffectKey.EnemyShoot);
+                
                 var laser = Instantiate(laserPrefab, transform.position, Quaternion.identity);
 
                 laser.transform.up = _player.transform.position - transform.position;

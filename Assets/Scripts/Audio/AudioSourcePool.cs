@@ -7,8 +7,9 @@ namespace Audio
     /// <summary>
     /// Object pool for AudioSource components to avoid constant instantiation and destruction.
     /// Optimized for 2D audio playback.
+    /// Used internally by AudioManager.
     /// </summary>
-    public class AudioSourcePool
+    internal class AudioSourcePool
     {
         private readonly Transform _parentTransform;
         private readonly Queue<AudioSource> _availableSources = new();

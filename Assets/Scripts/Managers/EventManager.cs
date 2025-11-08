@@ -21,7 +21,7 @@ namespace Managers
         // Wave Events
         public static event Action OnWaveComplete;
 
-        // Generalized entity destruction event: position + effect key (allows reuse across entity types)
+        // Generalized entity destruction event: position + sound type (allows reuse across entity types)
         public static event Action<Vector2, EffectKey> OnEntityDestroyed;
 
         // Score Event Triggers

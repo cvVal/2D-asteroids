@@ -143,6 +143,8 @@ namespace Managers
             // Notify UI of initial state after all OnEnable methods have run
             EventManager.TriggerLivesChanged(_lives);
             EventManager.TriggerScoreChanged(_score);
+            
+            AudioManager.Instance.PlayMusic(EffectKey.GameplayMusic);
         }
 
         private void OnEnable()
@@ -279,9 +281,17 @@ namespace Managers
             // If maxLevel > 0, winning occurs after clearing the last configured level
             if (maxLevel > 0 && _currentWave > maxLevel)
             {
-                _gameWon = true;
                 Debug.Log("GameManager: All waves cleared. You win!");
                 EventManager.TriggerGameWin();
+                
+                CancelInvoke(nameof(SpawnEnemies));
+
+                _rotateAction?.Disable();
+                _thrustAction?.Disable();
+                _shootAction?.Disable();
+                
+                _gameWon = true;
+                
                 return;
             }
 
@@ -292,6 +302,13 @@ namespace Managers
 
         private void HandlePlayerDeath()
         {
+            // If the game has already been won, ignore subsequent player deaths
+            if (_gameWon)
+            {
+                Debug.Log("GameManager: Player death ignored because the game has already been won.");
+                return;
+            }
+
             // Capture last known transform before clearing reference
             if (player)
             {
@@ -403,6 +420,9 @@ namespace Managers
 
         private void SpawnEnemies()
         {
+            // Prevent spawning if the game has ended or been won
+            if (_gameOver || _gameWon) return;
+
             if (!flyingSaucerPrefab) return;
 
             var position = AsteroidManager.RandomEdgePosition();

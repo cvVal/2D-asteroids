@@ -69,6 +69,8 @@ namespace Characters
         {
             if (bulletPrefab)
             {
+                AudioManager.Instance.PlaySfx(EffectKey.PlayerShoot);
+                
                 Instantiate(bulletPrefab, transform.position, transform.rotation);
             }
         }
