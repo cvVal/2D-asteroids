@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core;
+using ScriptableObjects.Asteroid;
 using UnityEngine;
 using UnityEngine.Pool;
 using Utility;
